@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    {% if title %}
+        <title>COVID 19 Pandemic - {{ title }}</title>
+    {% else %}
+        <title>COVID 19 Pandemic</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">COVID 19 Pandemic</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+              
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if current_user.is_authenticated %}
+			    <a class="nav-item nav-link" href="{{ url_for('prevention') }}">Prevention</a>
+				<a class="nav-item nav-link" href="{{ url_for('treatment') }}">Treatment</a>
+				<a class="nav-item nav-link" href="{{ url_for('symptoms') }}">Symptoms</a>
+                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+				<a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+	  {% if current_user.is_authenticated %}
+      <div class="row">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          <div class="container world" style=" border-radius: 30px; padding-top: 20px; padding-bottom: 20px;   box-shadow: 0px -1px 34px 19px rgba(250,50,50,1);">
+            <h2 class="sign__word">{{country.countryName}}</h2>
+            <br>
+            <div class="dropdown show" >
+                <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Select
+                </a>
+              
+                <div class="dropdown-menu" style=" max-height:500px; overflow:auto;"  aria-labelledby="dropdownMenuLink">
+                    {% for i in data %}
+
+                    <form action="/" method="POST">
+                        <input type="submit" class="dropdown-item" name="action" value = "{{i.countryName}}">
+                    </form>
+                    {% endfor %}
+
+        
+                </div>
+            </div>
+            <br>
+            <h3>Total Cases</h3>
+            <h4>{{country.totalCases}}</h4>
+            <br>
+            <h3>Active Cases</h3>
+            <h4>{{country.activeCases}}</h4>
+            <br>
+            <h3>Death</h3>
+            <h4>{{country.totalDeath}}</h4>
+            <br>
+            <h3>New Cases Today</h3>
+            {% if country.casesToday|length == 0 %}
+                <h4>0</h4>
+            {% else %}    
+                <h4>{{country.casesToday}}</h4>
+            {% endif %}    
+            <br>
+            <h3>Recovered</h3>
+            <h4>{{country.totalCured}}</h4>
+        </div>
+        <hr>
+
+
+        <hr>
+		  
+        </div>
+
+      </div>
+	  {% else %}
+	  <div style="background-image: url('covid.jpg');">
+	  {% endif %}
+    </main>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
